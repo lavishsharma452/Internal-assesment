@@ -1,15 +1,21 @@
-# Messy Python Code Improvement
+# Book Reading List
 
-This project demonstrates how messy Python code can be improved.
+A simple web application for managing a personal reading list.
 
-## Improvements
+## Features
 
-- Better formatting
+- Add book title
 
-- Meaningful variable names
+- Add author
 
-- Cleaner structure
+- Display books
 
-- Use of Python's built-in sum() function
+- Delete books
 
-Cursor AI was used to assist with improving the code.
+## Technologies
+
+HTML
+
+CSS
+
+JavaScript

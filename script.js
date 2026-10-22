@@ -1,74 +1,112 @@
-const questions = [
-    {
-        question: "Which language is used for data science?",
-        options: ["Python", "HTML", "CSS", "SQL"],
-        answer: "Python"
-    },
-    {
-        question: "Which keyword defines a function in Python?",
-        options: ["function", "def", "func", "define"],
-        answer: "def"
-    },
-    {
-        question: "Which language is used for web page structure?",
-        options: ["Python", "HTML", "Java", "C++"],
-        answer: "HTML"
-    },
-    {
-        question: "Which symbol is used for comments in Python?",
-        options: ["//", "#", "/*", "--"],
-        answer: "#"
-    },
-    {
-        question: "Which technology is used for styling web pages?",
-        options: ["HTML", "CSS", "Python", "SQL"],
-        answer: "CSS"
-    }
+/* Easy place to add, edit, or remove project cards later.
+   Just change this list. The page will update automatically. */
+const projects = [
+  {
+    title: "Python Programs Collection",
+    description: "A collection of beginner Python programs I am practicing.",
+    github: "https://github.com/PLACEHOLDER/python-programs-collection"
+  },
+  {
+    title: "Messy Python Code Improvement",
+    description: "Practice work where messy Python code is cleaned and improved.",
+    github: "https://github.com/PLACEHOLDER/messy-python-code-improvement"
+  },
+  {
+    title: "Bug Fixing Using Cursor AI",
+    description: "A learning project about finding and fixing bugs with Cursor AI.",
+    github: "https://github.com/PLACEHOLDER/bug-fixing-using-cursor-ai"
+  },
+  {
+    title: "Interactive Quiz Application",
+    description: "A simple quiz app built to practice JavaScript and web pages.",
+    github: "https://github.com/PLACEHOLDER/interactive-quiz-application"
+  },
+  {
+    title: "Book Reading List Application",
+    description: "A small app for keeping a list of books to read.",
+    github: "https://github.com/PLACEHOLDER/book-reading-list-application"
+  }
 ];
 
-let currentQuestion = 0;
-let score = 0;
+const projectGrid = document.getElementById("projectGrid");
+const projectSearch = document.getElementById("projectSearch");
+const emptyMsg = document.getElementById("emptyMsg");
+const themeBtn = document.getElementById("themeBtn");
+const menuBtn = document.getElementById("menuBtn");
+const navLinks = document.getElementById("navLinks");
 
-function showQuestion() {
-    const question = questions[currentQuestion];
+function createProjectCard(project) {
+  const card = document.createElement("article");
+  card.className = "project-card";
+  card.dataset.title = project.title.toLowerCase();
+  card.dataset.description = project.description.toLowerCase();
 
-    document.getElementById("question").textContent =
-        question.question;
+  card.innerHTML = `
+    <span class="placeholder">GitHub link: PLACEHOLDER</span>
+    <h3>${project.title}</h3>
+    <p>${project.description}</p>
+    <a href="${project.github}" target="_blank" rel="noopener noreferrer">
+      Open GitHub (PLACEHOLDER)
+    </a>
+  `;
 
-    const options = document.getElementById("options");
-    options.innerHTML = "";
-
-    question.options.forEach(function(option) {
-        const button = document.createElement("button");
-
-        button.textContent = option;
-
-        button.onclick = function() {
-            if (option === question.answer) {
-                score++;
-            }
-
-            nextQuestion();
-        };
-
-        options.appendChild(button);
-    });
+  return card;
 }
 
-function nextQuestion() {
-    currentQuestion++;
+function showProjects(list) {
+  projectGrid.innerHTML = "";
+  emptyMsg.hidden = true;
 
-    if (currentQuestion < questions.length) {
-        showQuestion();
-    } else {
-        document.getElementById("question").textContent =
-            "Quiz Completed!";
+  list.forEach(function (project) {
+    projectGrid.appendChild(createProjectCard(project));
+  });
+}
 
-        document.getElementById("options").innerHTML = "";
+function searchProjects() {
+  const text = projectSearch.value.toLowerCase().trim();
+  const cards = projectGrid.querySelectorAll(".project-card");
+  let matchCount = 0;
 
-        document.getElementById("score").textContent =
-            "Your Score: " + score + "/" + questions.length;
+  cards.forEach(function (card) {
+    const title = card.dataset.title;
+    const description = card.dataset.description;
+    const isMatch = title.includes(text) || description.includes(text);
+
+    card.hidden = !isMatch;
+    if (isMatch) {
+      matchCount = matchCount + 1;
     }
+  });
+
+  emptyMsg.hidden = matchCount !== 0;
 }
 
-showQuestion();
+function setTheme(isDark) {
+  document.documentElement.classList.toggle("dark", isDark);
+  themeBtn.textContent = isDark ? "Light Mode" : "Dark Mode";
+  themeBtn.setAttribute("aria-pressed", isDark ? "true" : "false");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+}
+
+/* Start with saved theme, or light mode */
+const savedTheme = localStorage.getItem("theme");
+setTheme(savedTheme === "dark");
+
+themeBtn.addEventListener("click", function () {
+  const isDark = !document.documentElement.classList.contains("dark");
+  setTheme(isDark);
+});
+
+showProjects(projects);
+
+projectSearch.addEventListener("input", searchProjects);
+
+menuBtn.addEventListener("click", function () {
+  navLinks.classList.toggle("open");
+});
+
+navLinks.querySelectorAll("a").forEach(function (link) {
+  link.addEventListener("click", function () {
+    navLinks.classList.remove("open");
+  });
+});
